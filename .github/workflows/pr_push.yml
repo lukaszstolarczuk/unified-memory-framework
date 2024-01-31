@@ -46,6 +46,8 @@ jobs:
             -DUMF_BUILD_LIBUMF_POOL_DISJOINT=${{matrix.disjoint}}
             -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=${{matrix.jemalloc}}
             -DUMF_BUILD_TESTS=OFF
+            -DUSE_ASAN=ON
+            -DUSE_UBSAN=ON
 
         - name: Build
           run: >
