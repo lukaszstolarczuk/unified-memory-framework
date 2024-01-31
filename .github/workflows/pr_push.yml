@@ -10,6 +10,7 @@ jobs:
     FastBuild:
         name: Fast build
         strategy:
+            fail-fast: false
             matrix:
                 os: [ubuntu-latest]
                 nproc: ['$(nproc)']

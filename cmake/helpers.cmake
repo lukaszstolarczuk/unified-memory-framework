@@ -136,29 +136,33 @@ macro(add_sanitizer_flag flag)
     # Check C and CXX compilers for given sanitizer flag.
     check_c_compiler_flag("${SANITIZER_FLAG}" "C_${check_name}")
     if (CMAKE_CXX_COMPILE_FEATURES)
+        message(STATUS "dupa333")
         check_cxx_compiler_flag("${SANITIZER_FLAG}" "CXX_${check_name}")
     endif()
-    if (NOT ${C_${check_name}} OR NOT ${CXX_${check_name}})
-        message(FATAL_ERROR "${flag} sanitizer is not supported (either by C or CXX compiler)")
+    message(STATUS "c: ${C_${check_name}}.")
+    message(STATUS "cxx: ${CXX_${check_name}}.")
+    if (NOT C_${check_name} AND NOT CXX_${check_name})
+        message(FATAL_ERROR "sanitizer '${flag}' is not supported (neither by C or CXX compiler)")
     endif()
+
+    add_compile_options("${SANITIZER_FLAG}")
 
     # Check C and CXX compilers for sanitizer arguments.
-    if (${SANITIZER_ARGS})
+    if (SANITIZER_ARGS)
         check_c_compiler_flag("${SANITIZER_ARGS}" "C_HAS_SAN_ARGS")
         if (CMAKE_CXX_COMPILE_FEATURES)
+            message(STATUS "dupa22")
             check_cxx_compiler_flag("${SANITIZER_ARGS}" "CXX_HAS_SAN_ARGS")
         endif()
-        if (NOT ${C_HAS_SAN_ARGS} OR NOT ${CXX_HAS_SAN_ARGS})
-            message(FATAL_ERROR "sanitizer argument ${SANITIZER_ARGS} is not supported (either by C or CXX compiler)")
+        message(STATUS "2c: ${C_HAS_SAN_ARGS}.")
+        message(STATUS "2cxx: ${CXX_HAS_SAN_ARGS}.")
+        if (NOT C_HAS_SAN_ARGS AND NOT CXX_HAS_SAN_ARGS)
+            message(FATAL_ERROR "sanitizer argument '${SANITIZER_ARGS}' is not supported (neither by C or CXX compiler)")
         endif()
 
-        set(SANITIZER_OPTION "${SANITIZER_FLAG} ${SANITIZER_ARGS}")
-    else()
-        # No sanitizer argument was set. For now, that's the case for MSVC.
-        set(SANITIZER_OPTION "${SANITIZER_FLAG}")
+        add_compile_options("${SANITIZER_ARGS}")
+        message(STATUS "args: ${SANITIZER_ARGS}.")
     endif()
-
-    add_compile_options("${SANITIZER_OPTION}")
 
     # Clang/gcc needs the flag added to the linker. The Microsoft LINK linker doesn't recognize
     # sanitizer flags and will give a LNK4044 warning.
@@ -166,5 +170,6 @@ macro(add_sanitizer_flag flag)
         add_link_options("${SANITIZER_OPTION}")
     endif()
 
+    message(STATUS "all opts: ${COMPILE_OPTIONS}.")
     set(CMAKE_REQUIRED_FLAGS ${SAVED_CMAKE_REQUIRED_FLAGS})
 endmacro()
