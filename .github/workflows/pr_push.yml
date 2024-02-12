@@ -6,9 +6,6 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
     cancel-in-progress: true
 
-permissions:
-  contents: read
-
 jobs:
     FastBuild:
         name: Fast build
@@ -80,7 +77,6 @@ jobs:
     Spellcheck:
         uses: ./.github/workflows/spellcheck.yml
     Build:
-        needs: [Spellcheck, FastBuild, CodeStyle]
         uses: ./.github/workflows/basic.yml
     Benchmark:
         needs: [Build]
