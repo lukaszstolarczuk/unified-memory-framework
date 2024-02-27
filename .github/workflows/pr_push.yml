@@ -68,7 +68,7 @@ jobs:
         ${{matrix.extra_build_options}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Release -j
+      run: cmake --build ${{github.workspace}}/build --config Release
 
     - name: Run examples
       working-directory: ${{github.workspace}}/build
