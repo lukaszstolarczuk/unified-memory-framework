@@ -10,6 +10,44 @@
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
 
+# src version shows the current version, as reported by 'git describe', unless
+# 'git' is not available, then it's set to the top-level defined version
+function(set_source_version)
+    execute_process(
+        COMMAND git describe --always
+        OUTPUT_VARIABLE GIT_VERSION
+        WORKING_DIRECTORY ${UMF_CMAKE_SOURCE_DIR}
+        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+
+    if(GIT_VERSION)
+        # 1.5-rc1-19-gb8f78a329 -> 1.5-rc1.git19.gb8f78a329
+        string(REGEX MATCHALL "([0-9.]*)-rc([0-9]*)-([0-9]*)-([0-9a-g]*)"
+                     MATCHES ${GIT_VERSION})
+        if(MATCHES)
+            set(SRCVERSION
+                "${CMAKE_MATCH_1}-rc${CMAKE_MATCH_2}.git${CMAKE_MATCH_3}.${CMAKE_MATCH_4}"
+                PARENT_SCOPE)
+            return()
+        endif()
+
+        # 1.5-19-gb8f78a329 -> 1.5-git19.gb8f78a329
+        string(REGEX MATCHALL "([0-9.]*)-([0-9]*)-([0-9a-g]*)" MATCHES
+                     ${GIT_VERSION})
+        if(MATCHES)
+            set(SRCVERSION
+                "${CMAKE_MATCH_1}-git${CMAKE_MATCH_2}.${CMAKE_MATCH_3}"
+                PARENT_SCOPE)
+            return()
+        endif()
+    endif()
+
+    # no git (or reported improper version), just use version set up in the
+    # top-level CMake
+    set(SRCVERSION
+        ${CMAKE_PROJECT_VERSION}
+        PARENT_SCOPE)
+endfunction()
+
 # Sets ${ret} to version of program specified by ${name} in major.minor format
 function(get_program_version_major_minor name ret)
     execute_process(

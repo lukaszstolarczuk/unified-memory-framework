@@ -8,6 +8,17 @@ project(
     VERSION 0.1.0
     LANGUAGES C)
 
+# needed when UMF is used as an external project
+set(UMF_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+list(APPEND CMAKE_MODULE_PATH "${UMF_CMAKE_SOURCE_DIR}/cmake")
+include(helpers)
+
+# CMAKE_PROJECT_VERSION[.MAJOR|MINOR|PATCH] is set via 'project' command
+set_source_version()
+message(
+    STATUS "UMF version: ${CMAKE_PROJECT_VERSION} (source ver: ${SRCVERSION})")
+
 # Build Options
 option(UMF_BUILD_SHARED_LIBRARY "Build UMF as shared library" OFF)
 option(UMF_BUILD_LEVEL_ZERO_PROVIDER "Build Level Zero memory provider" ON)
@@ -108,12 +119,6 @@ include(CTest)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 find_package(PkgConfig)
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(helpers)
-
-# needed when UMF is used as an external project
-set(UMF_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
