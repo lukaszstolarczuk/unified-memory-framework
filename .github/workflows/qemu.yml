@@ -24,7 +24,10 @@ jobs:
         sudo udevadm trigger --name-match=kvm
     - name: Install qemu
       run: |
-        sudo apt update && sudo apt install -y qemu-system genisoimage qemu-utils
+        sudo rm /etc/apt/sources.list.d/microsoft-prod.list
+        sudo apt update
+        sudo apt install -y qemu-system genisoimage qemu-utils
+
     - name: Run ssh-keygen
       run: ssh-keygen -b 4096 -N '' -f ~/.ssh/id_rsa
     - name: Generate iso with user info
