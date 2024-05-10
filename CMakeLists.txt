@@ -10,9 +10,11 @@ project(
 
 # needed when UMF is used as an external project
 set(UMF_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+message(STATUS "UMF_CMAKE_SOURCE_DIR: ${UMF_CMAKE_SOURCE_DIR}")
 
 list(APPEND CMAKE_MODULE_PATH "${UMF_CMAKE_SOURCE_DIR}/cmake")
-include(helpers)
+message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+include(${UMF_CMAKE_SOURCE_DIR}/cmake/helpers.cmake)
 
 # CMAKE_PROJECT_VERSION[_MAJOR|_MINOR|_PATCH] variables are set via 'project'
 # command. They cannot contain any "pre-release" part, though. We use custom
