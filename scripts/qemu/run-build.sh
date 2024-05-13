@@ -10,7 +10,7 @@ repo=$1
 branch=$2
 
 echo password | sudo -Sk apt update
-echo password | sudo -Sk apt install -y git cmake gcc g++ numactl libnuma-dev libhwloc-dev libjemalloc-dev libtbb-dev pkg-config valgrind hwloc
+echo password | sudo -Sk apt install -y git cmake gcc g++ numactl libnuma-dev libhwloc-dev libjemalloc-dev libtbb-dev valgrind hwloc
 
 numactl -H
 
