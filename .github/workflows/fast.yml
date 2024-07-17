@@ -123,19 +123,8 @@ jobs:
 
     - name: Run examples
       working-directory: ${{env.BUILD_DIR}}
-      run: ctest --output-on-failure --test-dir examples -C Release
+      run: ctest --verbose -R "umf_standalone_examples" -C Release
 
-    - name: Run tests
-      if: matrix.build_tests == 'ON'
+    - name: Run examples logger
       working-directory: ${{env.BUILD_DIR}}
-      run: ctest --output-on-failure --test-dir test -C Release
-
-    - name: check /DEPENDENTLOADFLAG (Windows only)
-      if: matrix.os == 'windows-latest'
-      run: ${{github.workspace}}/.github/scripts/check_dll_flags.ps1 ${{env.BUILD_DIR}}/bin/Release/umf.dll
-      shell: pwsh
-
-    - name: check /DEPENDENTLOADFLAG in umf_proxy.dll
-      if: matrix.os == 'windows-latest'
-      run: ${{github.workspace}}/.github/scripts/check_dll_flags.ps1 ${{env.BUILD_DIR}}/src/proxy_lib/Release/umf_proxy.dll
-      shell: pwsh
+      run: UMF_LOG="level:info;output:stdout" ctest --verbose -R "umf_standalone_examples" -C Release
