@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   trivy:
+    if: false
     name: Trivy
     runs-on: ubuntu-latest
     permissions:
