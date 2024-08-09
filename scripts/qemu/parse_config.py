@@ -81,7 +81,7 @@ def parse_topology_xml(tpg_file_name: str) -> TopologyCfg:
     except subprocess.CalledProcessError:
         sys.exit(f"\n XML file: {tpg_file_name} error in virsh parsing")
     except Exception:
-        sys.exit(f"\n Provided file is missing or missing virsh.")
+        sys.exit(f"\n Provided file ({tpg_file_name}) is missing or missing virsh.")
     return tpg
 
 
@@ -120,6 +120,11 @@ if __name__ == "__main__":
         tpg_file_name = sys.argv[1]
     else:
         sys.exit(f"\n Usage: {sys.argv[0]} <tpg_file_name>")
+
+    if verbose_mode != False:
+        print(os.path.realpath(__file__))
+        print(f"\nTopology file: {tpg_file_name}\n")
+        print(os.listdir(os.curdir))
 
     # Print QEMU arguments as a result of this script
     print(get_qemu_args(tpg_file_name))

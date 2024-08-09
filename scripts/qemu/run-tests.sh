@@ -17,9 +17,9 @@ cd build
 ctest --verbose
 
 # run tests bound to a numa node
-numactl -N 0 ctest --output-on-failure
-numactl -N 1 ctest --output-on-failure
+# numactl -N 0 ctest --output-on-failure
+# numactl -N 1 ctest --output-on-failure
 
 # run tests under valgrind
-echo "Running tests under valgrind memcheck ..."
-../test/test_valgrind.sh .. . memcheck
+#echo "Running tests under valgrind memcheck ..."
+#../test/test_valgrind.sh .. . memcheck

@@ -80,26 +80,28 @@ jobs:
 
     - name: Build UMF in QEMU
       run: |
-        umf/scripts/qemu/start_qemu.sh umf/scripts/qemu/configs/default.xml
+        umf/scripts/qemu/start_qemu.sh default.xml
 
         scp -P 2222 -r ${{github.workspace}}/umf/* cxltest@127.0.0.1:/home/cxltest/
+        ssh cxltest@127.0.0.1 -p 2222 -t "sudo chown -R cxltest:users /home/cxltest"
 
-        ssh cxltest@127.0.0.1 -p 2222 -t "ls -alR /home/cxltest/"
         ssh cxltest@127.0.0.1 -p 2222 -t "bash /home/cxltest/scripts/qemu/run-build.sh"
         ssh cxltest@127.0.0.1 -p 2222 -t "sudo shutdown -h now"
 
     - name: Run tests in QEMU
       run: |
         for config_file in umf/scripts/qemu/configs/*.xml; do
-          config_name=$(basename $config_file .xml)
+          config_name=$(basename $config_file)
 
           while ps -aux | grep qemu-system-x86_64 | grep -q -v grep; do
             echo "Waiting for QEMU to shut down..."
             sleep 5
           done
 
-          echo "### Testing $config_name ###"
-          umf/scripts/qemu/start_qemu.sh $config_file
+          ls -alR
+
+          echo "### Testing ${config_name} ###"
+          umf/scripts/qemu/start_qemu.sh $config_name
 
           ssh cxltest@127.0.0.1 -p 2222 -t "bash /home/cxltest/scripts/qemu/run-tests.sh"
           ssh cxltest@127.0.0.1 -p 2222 -t "sudo shutdown -h now"
