@@ -23,7 +23,7 @@ jobs:
     - name: Install apt packages
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake hwloc libhwloc-dev libjemalloc-dev libnuma-dev libtbb-dev valgrind
+        sudo apt-get install -y cmake hwloc libhwloc-dev libjemalloc-dev libnuma-dev libtbb-dev valgrind potrzebuje_więcej_paczek_do_testowania
 
     - name: Configure CMake
       run: >
@@ -34,7 +34,7 @@ jobs:
         -DUMF_DEVELOPER_MODE=ON
         -DUMF_BUILD_LIBUMF_POOL_DISJOINT=ON
         -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=ON
-        -DUMF_BUILD_LEVEL_ZERO_PROVIDER=OFF
+        -DUMF_BUILD_LEVEL_ZERO_PROVIDER=ON
         -DUMF_USE_VALGRIND=1
         -DUMF_TESTS_FAIL_ON_SKIP=ON
 
