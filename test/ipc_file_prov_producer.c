@@ -18,9 +18,9 @@
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
-        fprintf(stderr, "usage: %s <port> <file_name> <fsdax>\n", argv[0]);
-        fprintf(stderr, "       <fsdax> should be \"FSDAX\" or \"fsdax\" if "
-                        "<file_name> is located on FSDAX \n");
+        fprintf(stderr, "usage: %s <port> <file_name> [fsdax]\n", argv[0]);
+        fprintf(stderr, "       [fsdax] should be \"FSDAX\" or \"fsdax\" if "
+                        "<file_name> is located on FSDAX\n");
         return -1;
     }
 

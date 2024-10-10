@@ -19,7 +19,7 @@ if(JEMALLOC_HEADER)
     set(JEMALLOC_INCLUDE_DIRS ${JEMALLOC_INCLUDE_DIR})
 else()
     set(MSG_NOT_FOUND "<jemalloc/jemalloc.h> header NOT found "
-                      "(set CMAKE_PREFIX_PATH to point the location)")
+                      "(set CMAKE_PREFIX_PATH to point the location)!")
     if(JEMALLOC_FIND_REQUIRED)
         message(FATAL_ERROR ${MSG_NOT_FOUND})
     else()

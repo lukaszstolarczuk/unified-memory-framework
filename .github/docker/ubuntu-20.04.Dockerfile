@@ -55,10 +55,10 @@ RUN mkdir --mode 777 /opt/umf/
 
 # Additional dependencies (installed via pip)
 COPY third_party/requirements.txt /opt/umf/requirements.txt
-RUN pip3 install --no-cache-dir -r /opt/umf/requirements.txt
+RUN pip3 install -r /opt/umf/requirements.txt
 
 # Add a new (non-root) 'test_user'
 ENV USER test_user
 ENV USERPASS pass
 RUN useradd -m "${USER}" -g sudo -p "$(mkpasswd ${USERPASS})"
-USER test_user
+# USER test_user

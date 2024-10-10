@@ -38,7 +38,7 @@ static auto poolCreateExtUnique(poolCreateExtParams params) {
     auto ret =
         umfMemoryProviderCreate(provider_ops, provider_params, &provider);
     if (ret != UMF_RESULT_SUCCESS) {
-        std::cerr << "provider create failed" << std::endl;
+        std::cerr << "provider create failed!" << std::endl;
         abort();
     }
 

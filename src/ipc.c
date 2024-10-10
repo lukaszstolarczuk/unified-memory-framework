@@ -32,7 +32,7 @@ umf_result_t umfPoolGetIPCHandleSize(umf_memory_pool_handle_t hPool,
         return UMF_RESULT_ERROR_INVALID_ARGUMENT;
     }
 
-    // We cannot use umfPoolGetMemoryProvider function because it returns
+    // We can't use umfPoolGetMemoryProvider function because it returns
     // upstream provider but we need tracking one
     umf_memory_provider_handle_t hProvider = hPool->provider;
     assert(hProvider);
