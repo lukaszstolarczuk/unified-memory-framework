@@ -39,7 +39,8 @@ FetchContent_Declare(
 
 FetchContent_GetProperties(level-zero-loader)
 if(NOT level-zero-loader_POPULATED)
-    FetchContent_Populate(level-zero-loader)
+    set(CMAKE_POLICY_DEFAULT_CMP0177 NEW)
+    FetchContent_MakeAvailable(level-zero-loader)
 endif()
 
 set(LEVEL_ZERO_INCLUDE_DIRS

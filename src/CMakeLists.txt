@@ -35,7 +35,8 @@ if(UMF_BUILD_LEVEL_ZERO_PROVIDER AND (UMF_BUILD_GPU_TESTS
 
     FetchContent_GetProperties(level-zero-loader)
     if(NOT level-zero-loader_POPULATED)
-        FetchContent_Populate(level-zero-loader)
+        set(CMAKE_POLICY_DEFAULT_CMP0177 NEW)
+        FetchContent_MakeAvailable(level-zero-loader)
     endif()
 
     set(LEVEL_ZERO_INCLUDE_DIRS
@@ -65,7 +66,7 @@ if(UMF_BUILD_CUDA_PROVIDER)
 
     FetchContent_GetProperties(cuda-headers)
     if(NOT cuda-headers_POPULATED)
-        FetchContent_Populate(cuda-headers)
+        FetchContent_MakeAvailable(cuda-headers)
     endif()
 
     set(CUDA_INCLUDE_DIRS
