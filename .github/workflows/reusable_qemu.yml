@@ -21,7 +21,7 @@ jobs:
     name: Qemu
     strategy:
       matrix:
-        os: ${{ fromJSON(github.event.inputs.os) }}
+        os: ${{ fromJSON('["ubuntu-22.04", "ubuntu-23.04", "ubuntu-24.04"]') }}
         include:
           - os: 'ubuntu-22.04'
             dwnld_link: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
