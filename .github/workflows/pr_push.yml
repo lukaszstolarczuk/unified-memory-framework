@@ -34,6 +34,7 @@ jobs:
     uses: ./.github/workflows/reusable_qemu.yml
     with:
       short_run: true
+      os: "['ubuntu-23.04']"
   Qemu-long:
     needs: [FastBuild]
     uses: ./.github/workflows/reusable_qemu.yml

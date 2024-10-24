@@ -8,6 +8,10 @@ on:
         description: Should the workflow run only basic tests?
         type: boolean
         default: false
+      os:
+        description: List of OSes
+        type: string
+        default: '["ubuntu-22.04", "ubuntu-23.04", "ubuntu-24.04"]'
 
 permissions:
   contents: read
@@ -15,6 +19,17 @@ permissions:
 jobs:
   qemu-build:
     name: Qemu
+    strategy:
+      matrix:
+        os: ${{ fromJSON(github.event.inputs.os) }}
+        include:
+          - os: 'ubuntu-22.04'
+            dwnld_link: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
+          - os: 'ubuntu-23.04'
+            dwnld_link: "https://cloud-images.ubuntu.com/releases/lunar/release/ubuntu-23.04-server-cloudimg-amd64.img"
+          - os: 'ubuntu-24.04'
+            dwnld_link: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+
     runs-on: ubuntu-22.04
 
     steps:
@@ -86,10 +101,10 @@ jobs:
         sudo -Sk genisoimage -output ubuntu-cloud-init.iso -volid cidata -joliet -rock ./user-data ./meta-data
 
     - name: Download ubuntu image
-      run: wget https://cloud-images.ubuntu.com/releases/lunar/release/ubuntu-23.04-server-cloudimg-amd64.img
+      run: wget ${{matrix.dwnld_link}} -O qemu_image.img
 
     - name: Resize image
-      run: qemu-img resize ./ubuntu-23.04-server-cloudimg-amd64.img +4G
+      run: qemu-img resize ./qemu_image.img +4G
 
     - name: Build UMF in QEMU
       run: |
