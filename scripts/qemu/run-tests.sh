@@ -3,6 +3,8 @@
 # Under the Apache License v2.0 with LLVM Exceptions. See LICENSE.TXT.
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+# If env var SHORT_RUN is set to true, part of the tests are skipped here.
+
 set -e
 
 COVERAGE=$1
@@ -30,7 +32,7 @@ ctest --verbose
 
 # run tests bound to a numa node
 numactl -N 0 ctest --output-on-failure
-numactl -N 1 ctest --output-on-failure
+[ "${SHORT_RUN}" == "false" ] && numactl -N 1 ctest --output-on-failure
 
 if [ "$COVERAGE" = "COVERAGE" ]; then
 	COVERAGE_FILE_NAME=exports-coverage-qemu-$CONFIG_NAME

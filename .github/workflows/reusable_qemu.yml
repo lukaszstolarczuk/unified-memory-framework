@@ -1,7 +1,13 @@
 # Builds project on qemu with custom hmat settings
 name: Qemu
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      short_run:
+        description: Should the workflow run only basic tests?
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -96,9 +102,24 @@ jobs:
         ssh testuser@127.0.0.1 -p 2222 -t "bash /home/testuser/scripts/qemu/run-build.sh COVERAGE"
         ssh testuser@127.0.0.1 -p 2222 -t "sudo shutdown -h now"
 
+    - name: Set vars if short run
+      if: ${{ github.event.inputs.short_run == true }}
+      run: |
+        echo "SHORT_RUN=true" >> $GITHUB_ENV
+        echo "CONFIG_OPTIONS=${short_configs[@]}" >> $GITHUB_ENV
+
+    - name: Set vars if long run
+      if: ${{ github.event.inputs.short_run == false }}
+      run: |
+        echo "SHORT_RUN=false" >> $GITHUB_ENV
+        echo "CONFIG_OPTIONS=umf/scripts/qemu/configs/*.xml" >> $GITHUB_ENV
+
     - name: Run tests in QEMU
       run: |
-        for config_file in umf/scripts/qemu/configs/*.xml; do
+        declare -a short_configs=("default.xml" "sock_2_var3.xml" "sock_4_var1_hmat.xml")
+        echo "Running tests for: ${CONFIG_OPTIONS}"
+
+        for config_file in ${CONFIG_OPTIONS}; do
           config_name=$(basename $config_file)
 
           while ps -aux | grep qemu-system-x86_64 | grep -q -v grep; do
