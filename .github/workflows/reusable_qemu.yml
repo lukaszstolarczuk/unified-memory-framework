@@ -148,6 +148,7 @@ jobs:
         ls -al ./coverage
 
     - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+      if: ${{ inputs.short_run == true }}
       with:
         name: exports-coverage-qemu-short-${{matrix.os}}
         path: coverage
