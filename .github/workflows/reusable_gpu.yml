@@ -50,9 +50,11 @@ jobs:
           - os: 'Ubuntu'
             compiler: {c: gcc, cxx: g++}
             number_of_processors: '$(nproc)'
-          - os: 'Windows'
-            compiler: {c: cl, cxx: cl}
-            number_of_processors: '$Env:NUMBER_OF_PROCESSORS'
+          # FIXME:
+          # Temporarily disable including Windows options until we have CUDA enabled.
+          # - os: 'Windows'
+          #   compiler: {c: cl, cxx: cl}
+          #   number_of_processors: '$Env:NUMBER_OF_PROCESSORS'
 
     runs-on: ["DSS-${{inputs.name}}", "DSS-${{matrix.os}}"]
     steps:
@@ -66,10 +68,10 @@ jobs:
         run: .github/scripts/get_system_info.sh
 
       # note: disable all providers except the one being tested
-      - name: Configure build
+      - name: "[Lin] Configure build"
+        if: matrix.os == 'Ubuntu'
         run: >
           cmake
-          -DCMAKE_PREFIX_PATH="${{env.VCPKG_PATH}}"
           -B ${{env.BUILD_DIR}}
           -DCMAKE_INSTALL_PREFIX="${{env.INSTL_DIR}}"
           -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
@@ -89,8 +91,32 @@ jobs:
           -DUMF_TESTS_FAIL_ON_SKIP=ON
           ${{ matrix.os == 'Ubuntu' && matrix.build_type == 'Debug' && '-DUMF_USE_COVERAGE=ON' || '' }}
 
+      # note: disable all providers except the one being tested
+      - name: "[Win] Configure build"
+        if: matrix.os == 'Windows'
+        run: >
+          cmake
+          -DCMAKE_PREFIX_PATH="${{env.VCPKG_PATH}}"
+          -B ${{env.BUILD_DIR}}
+          -DCMAKE_INSTALL_PREFIX="${{env.INSTL_DIR}}"
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DCMAKE_C_COMPILER=cl
+          -DCMAKE_CXX_COMPILER=cl
+          -DUMF_BUILD_SHARED_LIBRARY=${{matrix.shared_library}}
+          -DUMF_BUILD_BENCHMARKS=ON
+          -DUMF_BUILD_TESTS=ON
+          -DUMF_BUILD_GPU_TESTS=ON
+          -DUMF_BUILD_GPU_EXAMPLES=ON
+          -DUMF_DEVELOPER_MODE=ON
+          -DUMF_BUILD_LIBUMF_POOL_DISJOINT=ON
+          -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=ON
+          -DUMF_BUILD_CUDA_PROVIDER=OFF
+          -DUMF_BUILD_LEVEL_ZERO_PROVIDER=OFF
+          -DUMF_BUILD_${{inputs.name}}_PROVIDER=ON
+          -DUMF_TESTS_FAIL_ON_SKIP=ON
+
       - name: Build UMF
-        run: cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j ${{matrix.number_of_processors}}
+        run: cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j8
 
       - name: Run tests
         working-directory: ${{env.BUILD_DIR}}
