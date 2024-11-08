@@ -1,4 +1,4 @@
-# Coverity check
+# Coverity - static analysis build. It requires Coverity's token (set in CI's secret).
 name: Coverity
 
 on:
@@ -7,7 +7,7 @@ on:
       cov_push_tarball:
           description: 'Send Coverity tarball'
           required: true
-          default: 'true'
+          default: true
           type: boolean
   schedule:
     - cron: '0 0 * * *'
@@ -18,7 +18,7 @@ permissions:
 jobs:
   coverity:
     name: Coverity
-    # run only on upstream; forks do not know Username/Password
+    # run only on upstream; forks don't have token for upstream's cov project
     if: github.repository == 'oneapi-src/unified-memory-framework'
     runs-on: ubuntu-latest
     steps:
@@ -35,11 +35,11 @@ jobs:
 
     - name: Download Coverity
       run: |
-        wget -nv https://scan.coverity.com/download/linux64 --post-data "token=${{ secrets.COVERITY_SCAN_TOKEN }}&project=oneapi-src%2Funified-memory-framework" -O coverity_tool.tgz
+        wget -O coverity_tool.tgz -nv https://scan.coverity.com/download/linux64 \
+          --post-data "token=${{ secrets.COVERITY_SCAN_TOKEN }}&project=oneapi-src%2Funified-memory-framework"
 
     - name: Extract Coverity
-      run: |
-        tar xzf coverity_tool.tgz
+      run: tar xzf coverity_tool.tgz
 
     - name: Configure CMake
       run: >
@@ -58,11 +58,10 @@ jobs:
         if [ -n "$COVERITY_DIR" ]; then
           export PATH="$PATH:$COVERITY_DIR/bin"
         fi
-        cov-build --dir ${{github.workspace}}/cov-int cmake --build ${{github.workspace}}/build --config Release -j$(nproc)
+        cov-build --dir ${{github.workspace}}/coverity-files cmake --build ${{github.workspace}}/build --config Release -j$(nproc)
 
     - name: Create tarball to analyze
-      run: >
-        tar czvf cov-int_umf.tgz cov-int
+      run: tar czvf umf-coverity-files.tgz coverity-files
 
     - name: Push to Coverity Scan
       if: ${{ github.event_name == 'schedule' || github.event.inputs.cov_push_tarball == 'true' }}
@@ -71,7 +70,7 @@ jobs:
         COMMIT_ID=$(echo $GITHUB_SHA)
         curl --form token=${{ secrets.COVERITY_SCAN_TOKEN }} \
         --form email=sys_bb-umf@intel.com \
-        --form file=@cov-int_umf.tgz \
+        --form file=@umf-coverity-files.tgz \
         --form version="$COMMIT_ID" \
         --form description="$BRANCH_NAME:$COMMIT_ID" \
         https://scan.coverity.com/builds\?project\=oneapi-src%2Funified-memory-framework
