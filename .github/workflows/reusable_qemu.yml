@@ -20,6 +20,7 @@ jobs:
   qemu-build:
     name: QEMU
     strategy:
+      fail-fast: false
       matrix:
         os: ${{ fromJson(inputs.os) }}
 
