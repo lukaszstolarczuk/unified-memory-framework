@@ -191,4 +191,4 @@ jobs:
     uses: ./.github/workflows/reusable_qemu.yml
     with:
       short_run: false
-      os: "['ubuntu-22.04', 'ubuntu-24.04']"
+      os: "['ubuntu-22.04', 'ubuntu-24.04', 'ubuntu-24.10']"
