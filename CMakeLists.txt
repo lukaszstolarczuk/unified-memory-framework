@@ -283,6 +283,22 @@ elseif(UMF_BUILD_CUDA_PROVIDER)
     message(STATUS "CUDA include directory: ${CUDA_INCLUDE_DIRS}")
 endif()
 
+if(hwloc_targ_SOURCE_DIR)
+    # apply security patch for HWLOC
+    execute_process(
+        COMMAND git apply ${PROJECT_SOURCE_DIR}/cmake/fix_coverity_issues.patch
+        WORKING_DIRECTORY ${hwloc_targ_SOURCE_DIR}
+        OUTPUT_VARIABLE UMF_HWLOC_PATCH_OUTPUT
+        ERROR_VARIABLE UMF_HWLOC_PATCH_ERROR)
+
+    if(UMF_HWLOC_PATCH_OUTPUT)
+        message(STATUS "HWLOC patch command output:\n${UMF_HWLOC_PATCH_OUTPUT}")
+    endif()
+    if(UMF_HWLOC_PATCH_ERROR)
+        message(WARNING "HWLOC patch command output:\n${UMF_HWLOC_PATCH_ERROR}")
+    endif()
+endif()
+
 # This build type check is not possible on Windows when CMAKE_BUILD_TYPE is not
 # set, because in this case the build type is determined after a CMake
 # configuration is done (at the build time)
