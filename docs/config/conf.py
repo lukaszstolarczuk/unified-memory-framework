@@ -49,7 +49,7 @@ html_theme = "sphinx_book_theme"
 # -- Extension configuration -------------------------------------------------
 
 # -- Options for breathe extension -------------------------------------------
-breathe_projects = {project: "../../docs/xml"}
+breathe_projects = {project: "doxyxml"}
 breathe_default_project = project
 breathe_show_include = False
 breathe_default_members = ("members", "undoc-members")

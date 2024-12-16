@@ -11,16 +11,6 @@ import subprocess  # nosec B404
 import time
 
 
-def _check_cwd() -> None:
-    script_path = Path(__file__).resolve().parent
-    cwd = Path.cwd()
-    if script_path != cwd:
-        print(
-            f"{__file__} script has to be run from the 'scripts' directory. Terminating..."
-        )
-        exit(1)
-
-
 def _clear_docs_dir(docs_path: Path) -> None:
     if docs_path.exists():
         try:
@@ -65,9 +55,10 @@ def _generate_html(config_path: Path, docs_path: Path) -> None:
 
 
 def main() -> None:
-    _check_cwd()
-    config_path = Path("docs_config").resolve()
-    docs_path = Path("..", "docs").resolve()
+    script_dir = Path(__file__).resolve().parent
+    config_path = Path(script_dir, "config").resolve()
+    docs_path = Path("generated").resolve()
+
     start = time.time()
     _prepare_docs_dir(docs_path)
     _generate_xml(config_path, docs_path)
