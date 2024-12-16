@@ -30,4 +30,7 @@ jobs:
         python3 -m pip install -r third_party/requirements.txt
 
     - name: Build the documentation
-      run: python3 docs/generate_docs.py
+      run: |
+        mkdir build
+        cd build
+        python3 ../docs/generate_docs.py
