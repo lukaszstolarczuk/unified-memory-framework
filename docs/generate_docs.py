@@ -41,11 +41,11 @@ def _generate_xml(config_path: Path, docs_path: Path) -> None:
         exit(1)
 
 
-def _generate_html(docs_path: Path) -> None:
+def _generate_html(config_path: Path, docs_path: Path) -> None:
     print("Generating HTML pages with sphinx...", flush=True)
     try:
         subprocess.run(
-            ["sphinx-build", Path("."), Path(docs_path, "html")], text=True
+            ["sphinx-build", config_path, Path(docs_path, "html")], text=True
         ).check_returncode()  # nosec B603, B607
         print(f"All HTML files generated in {docs_path}", flush=True)
     except subprocess.CalledProcessError as ex:
@@ -56,17 +56,19 @@ def _generate_html(docs_path: Path) -> None:
 
 def main() -> None:
     script_dir = Path(__file__).resolve().parent
-    config_path = Path(script_dir, "config").resolve()
-    docs_path = Path("generated").resolve()
+    docs_build_path = Path("docs_build").resolve()
+
+    # Sphinx and breathe require access to a Doxygen generated dir ('doxyxml')
+    # so we copy the whole content of the 'docs' dir to the build dir.
+    copytree(Path(script_dir), docs_build_path, dirs_exist_ok=True)
+
+    config_path = Path(docs_build_path, "config").resolve()
+    docs_path = Path(docs_build_path, "generated").resolve()
 
     start = time.time()
     _prepare_docs_dir(docs_path)
     _generate_xml(config_path, docs_path)
-
-    # Sphinx and breate require access to a dir generated with Doxygen ('./doxyxml')
-    # so we copy the whole content of the 'config' dir to the current dir.
-    copytree(Path(config_path), Path("."), dirs_exist_ok=True)
-    _generate_html(docs_path)
+    _generate_html(config_path, docs_path)
     print(f"Pages generated in {time.time() - start:.1f} seconds", flush=True)
 
 

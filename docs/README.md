@@ -1,5 +1,7 @@
-The documentation HTML files are generated using the following dependencies:
- * [Python](https://www.python.org/downloads/) at least v3.8
- * [Doxygen](http://www.doxygen.nl/) at least v1.9.1
+To generate HTML documentation run the `generate_docs.py` script. It will create `./docs_build` directory, where
+the intermediate and final files will be created. HTML docs will be in the `./docs_build/generated/html` directory.
 
- To generate files run the `generate_docs.py` script. Files will be generated in the `generated/html` directory.
+The script requires:
+ * [Doxygen](http://www.doxygen.nl/) at least v1.9.1
+ * [Python](https://www.python.org/downloads/) at least v3.8
+ * and python pip requirements, as defined in `third_party/requirements.txt`

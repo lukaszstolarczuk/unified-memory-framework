@@ -58,7 +58,7 @@ __pycache__/
 *.py[cod]
 
 # Generated docs
-generated/
+docs_build/
 
 # Build files
 /build*/
