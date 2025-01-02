@@ -39,7 +39,7 @@ function(build_umf_test)
     set(TEST_NAME umf-${ARG_NAME})
     set(TEST_TARGET_NAME umf_test-${ARG_NAME})
 
-    set(LIB_DIRS ${LIB_DIRS} ${LIBHWLOC_LIBRARY_DIRS})
+    set(LIB_DIRS ${LIB_DIRS} ${CMAKE_BINARY_DIR}/lib ${LIBHWLOC_LIBRARY_DIRS})
 
     if(UMF_BUILD_CUDA_PROVIDER)
         set(INC_DIRS ${INC_DIRS} ${CUDA_INCLUDE_DIRS})
