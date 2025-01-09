@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 set -e
+set -x
 
 # The config file name (should be located in ./configs/ sub-dir)
 config_name=$1
