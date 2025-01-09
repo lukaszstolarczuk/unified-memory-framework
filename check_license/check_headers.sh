@@ -69,9 +69,9 @@ done
 
 if [ $CHECK_ALL -eq 0 ]; then
 	CURRENT_COMMIT=$($GIT --no-pager log --pretty=%H -1)
-	MERGE_BASE=$($GIT merge-base HEAD origin/master 2>/dev/null)
+	MERGE_BASE=$($GIT merge-base HEAD origin/main 2>/dev/null)
 	[ -z $MERGE_BASE ] && \
-		MERGE_BASE=$($GIT --no-pager log --pretty="%cN:%H" | grep GitHub | head -n1 | cut -d: -f2)
+		MERGE_BASE=$($GIT --no-pager log --pretty="%cN:%H" | grep GitHub 2>/dev/null | head -n1 | cut -d: -f2)
 	[ -z $MERGE_BASE -o "$CURRENT_COMMIT" = "$MERGE_BASE" ] && \
 		CHECK_ALL=1
 fi
