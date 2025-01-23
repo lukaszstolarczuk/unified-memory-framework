@@ -84,7 +84,6 @@ jobs:
    - name: Build UMF
      shell: cmd
      run: |
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
         call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
         cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j %NUMBER_OF_PROCESSORS%
 
