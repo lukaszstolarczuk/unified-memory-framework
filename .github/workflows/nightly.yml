@@ -84,6 +84,7 @@ jobs:
    - name: Build UMF
      shell: cmd
      run: |
+        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
         call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
         cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j %NUMBER_OF_PROCESSORS%
 
@@ -91,4 +92,7 @@ jobs:
      shell: cmd
      working-directory: ${{env.BUILD_DIR}}
      run: |
-       ctest -C ${{matrix.build_type}} --output-on-failure --test-dir test
+      set PATH=${{env.BUILD_DIR}}\bin\${{matrix.build_type}};%PATH%
+      set LIB=${{env.BUILD_DIR}}\bin\${{matrix.build_type}};${{env.BUILD_DIR}}\lib\${{matrix.build_type}};%LIB%
+      set CPATH=${{env.BUILD_DIR}}\bin\${{matrix.build_type}};${{env.BUILD_DIR}}\lib\${{matrix.build_type}};%CPATH%
+      ctest -C ${{matrix.build_type}} --output-on-failure --test-dir test
