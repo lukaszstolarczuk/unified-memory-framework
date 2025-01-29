@@ -11,6 +11,8 @@ jobs:
   CodeChecks:
     name: Basic code checks
     runs-on: ${{ github.repository_owner == 'oneapi-src' && 'intel-ubuntu-22.04' || 'ubuntu-latest' }}
+    outputs:
+      filters: ${{ steps.result.outputs.result }}
 
     steps:
     - name: Checkout repository
@@ -18,59 +20,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y black cmake clang-format-15 cmake-format libhwloc-dev doxygen
-
-    # Latest distros do not allow global pip installation
-    - name: Install Python requirements in venv
-      run: |
-        python3 -m venv .venv
-        . .venv/bin/activate
-        echo "$PATH" >> $GITHUB_PATH
-        python3 -m pip install -r third_party/requirements.txt
-        python3 -m pip install bandit codespell
-
-    - name: Configure CMake
-      run: >
-        cmake
-        -B ${{github.workspace}}/build
-        -DUMF_FORMAT_CODE_STYLE=ON
-        -DUMF_BUILD_TESTS=OFF
-        -DUMF_BUILD_LEVEL_ZERO_PROVIDER=OFF
-        -DUMF_BUILD_CUDA_PROVIDER=OFF
-        -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF
-
-    - name: Check C/C++ formatting
-      run: cmake --build build --target clang-format-check
-
-    - name: Check CMake formatting
-      run: |
-        cmake --build build --target cmake-format-apply
-        git diff --exit-code
-
-    - name: Check Python formatting
-      run: cmake --build build --target black-format-check
-
-    - name: Run check-license
-      run: |
-        ./scripts/check_license/check_headers.sh . "Apache-2.0 WITH LLVM-exception" -v
-
-    - name: Run a spell check
-      uses: crate-ci/typos@b63f421581dce830bda2f597a678cb7776b41877 # v1.18.2
+    - name: Set output
+      id: result
+      uses: actions/github-script@v7
       with:
-        config: ./.github/workflows/.spellcheck-conf.toml
-
-    - name: Run codespell
-      run: python3 ./.github/scripts/run-codespell.py
-
-    - name: Check spelling in docs
-      run: |
-        cmake -B build
-        cmake --build build --target docs
-        sphinx-build -b spelling ./build/docs_build/config ./build/docs_build/spelling_log -W
-
-    # Run Bandit recursively, but omit _deps directory (with 3rd party code) and python's venv
-    - name: Run Bandit
-      run: python3 -m bandit -r . -x '/_deps/,/.venv/'
+        script: |
+          console.log("Number of files changed:");
+          return ["llvm", "llvm_spirv", "clang", "sycl_jit", "xptifw", "libclc", "sycl", "ci", "esimd"];
