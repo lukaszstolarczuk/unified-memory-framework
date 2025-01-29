@@ -2,7 +2,12 @@
 # TODO: add license check
 name: Basic checks
 
-on: workflow_call
+on:
+  workflow_call:
+    outputs:
+      filters:
+        description: Matched filters
+        value: ${{ jobs.CodeChecks.outputs.filters }}
 
 permissions:
   contents: read
