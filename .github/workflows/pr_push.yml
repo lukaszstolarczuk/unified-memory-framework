@@ -18,5 +18,5 @@ jobs:
   unified-runtime:
     name: Unified Runtime
     needs: [CodeChecks]
-    if: ${{ contains(needs.CodeChecks.outputs.filters, 'BLARGHA') }}
+    if: ${{ contains(needs.CodeChecks.outputs.filters, 'sycl') }}
     uses: ./.github/workflows/reusable_codeql.yml
