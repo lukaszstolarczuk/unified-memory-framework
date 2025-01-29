@@ -8,10 +8,6 @@ on:
       - 'dependabot/**'
   pull_request:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
@@ -22,5 +18,5 @@ jobs:
   unified-runtime:
     name: Unified Runtime
     needs: [CodeChecks]
-    if: ${{ contains(needs.CodeChecks.outputs.filters, 'sycl') }}
+    if: ${{ contains(needs.CodeChecks.outputs.filters, 'BLARGHA') }}
     uses: ./.github/workflows/reusable_codeql.yml

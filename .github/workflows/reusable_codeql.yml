@@ -13,8 +13,6 @@ env:
 jobs:
   analyze:
     name: Analyze
-    permissions:
-      security-events: write
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
