@@ -15,6 +15,18 @@ jobs:
   CodeChecks:
     uses: ./.github/workflows/reusable_checks.yml
 
+  Basic:
+    name: Basic code checks
+    needs: [CodeChecks]
+    runs-on: ${{ github.repository_owner == 'oneapi-src' && 'intel-ubuntu-22.04' || 'ubuntu-latest' }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        fetch-depth: 0
+    - name: Read output
+      run: echo '${{ needs.CodeChecks.outputs.filters }}'
+
   unified-runtime:
     name: Unified Runtime
     needs: [CodeChecks]
