@@ -22,6 +22,7 @@ jobs:
         build_type: [Debug]
         compiler: [{c: cl, cxx: cl}]
         shared_library: ['ON', 'OFF']
+        static_hwloc: ['ON', 'OFF']
         include:
           - os: windows-2022
             build_type: Release
@@ -52,8 +53,6 @@ jobs:
     - name: Configure build
       shell: cmd
       run: |
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
         cmake ^
           -B ${{env.BUILD_DIR}} ^
           -DCMAKE_PREFIX_PATH="${{env.VCPKG_PATH}}" ^
@@ -61,6 +60,7 @@ jobs:
           -DCMAKE_CXX_COMPILER=${{matrix.compiler.cxx}} ^
           -G Ninja ^
           -DUMF_BUILD_SHARED_LIBRARY=${{matrix.shared_library}} ^
+          -DUMF_LINK_HWLOC_STATICALLY=${{matrix.static_hwloc}} ^
           -DUMF_FORMAT_CODE_STYLE=OFF ^
           -DUMF_DEVELOPER_MODE=ON ^
           -DUMF_BUILD_LIBUMF_POOL_DISJOINT=ON ^
@@ -72,14 +72,10 @@ jobs:
     - name: Build UMF
       shell: cmd
       run: |
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
         cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j %NUMBER_OF_PROCESSORS%
 
     - name: Run tests
       shell: cmd
       working-directory: ${{env.BUILD_DIR}}
       run: |
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
         ctest -C ${{matrix.build_type}} --output-on-failure --test-dir test
