@@ -25,7 +25,7 @@ jobs:
         cuda_provider: ['ON']
         install_tbb: ['ON']
         disable_hwloc: ['OFF']
-        link_hwloc_statically: ['OFF']
+        link_hwloc_statically: ['ON', 'OFF']
     runs-on: ${{matrix.os}}
 
     steps:
