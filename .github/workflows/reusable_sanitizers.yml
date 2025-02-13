@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  ubuntu-build:
+  ubuntu_build:
     name: Ubuntu
     strategy:
       matrix:
@@ -75,8 +75,8 @@ jobs:
       run: |
         ctest --output-on-failure
 
-  windows-build:
-    name: cl and clang-cl on Windows
+  windows_build:
+    name: Windows
     env:
       VCPKG_PATH: "${{github.workspace}}/build/vcpkg/packages/hwloc_x64-windows;${{github.workspace}}/build/vcpkg/packages/tbb_x64-windows;${{github.workspace}}/build/vcpkg/packages/jemalloc_x64-windows"
     strategy:

@@ -11,6 +11,7 @@ on:
           type: boolean
   schedule:
     - cron: '0 0 * * *'
+  pull_request:
 
 permissions:
   contents: read
@@ -18,7 +19,7 @@ permissions:
 jobs:
   coverity:
     name: Coverity
-    # run only on upstream; forks do not know Username/Password
+    # run only on upstream; forks don't have token for upstream's cov project
     if: github.repository == 'oneapi-src/unified-memory-framework'
     runs-on: ubuntu-latest
     steps:
@@ -33,14 +34,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y cmake hwloc libhwloc-dev libnuma-dev libtbb-dev
 
-    - name: Download Coverity
-      run: |
-        wget -nv https://scan.coverity.com/download/linux64 --post-data "token=${{ secrets.COVERITY_SCAN_TOKEN }}&project=oneapi-src%2Funified-memory-framework" -O coverity_tool.tgz
-
-    - name: Extract Coverity
-      run: |
-        tar xzf coverity_tool.tgz
-
     - name: Configure CMake
       run: >
         cmake
@@ -51,6 +44,10 @@ jobs:
         -DUMF_TESTS_FAIL_ON_SKIP=ON
         -DUMF_BUILD_LIBUMF_POOL_DISJOINT=ON
         -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=ON
+        -DUMF_BUILD_TESTS=ON
+        -DUMF_BUILD_EXAMPLES=ON
+        -DUMF_BUILD_BENCHMARKS=ON
+        -DUMF_BUILD_BENCHMARKS_MT=ON
 
     - name: Build
       run: |
@@ -60,9 +57,16 @@ jobs:
         fi
         cov-build --dir ${{github.workspace}}/cov-int cmake --build ${{github.workspace}}/build --config Release -j$(nproc)
 
+    - name: Download Coverity
+      run: |
+        wget -O coverity_tool.tgz -nv https://scan.coverity.com/download/linux64 --post-data \
+          "token=${{ secrets.COVERITY_SCAN_TOKEN }}&project=oneapi-src%2Funified-memory-framework"
+
+    - name: Extract Coverity
+      run: tar xzf coverity_tool.tgz
+
     - name: Create tarball to analyze
-      run: >
-        tar czvf cov-int_umf.tgz cov-int
+      run: tar czvf cov-int_umf.tgz cov-int
 
     - name: Push to Coverity Scan
       if: ${{ github.event_name == 'schedule' || github.event.inputs.cov_push_tarball == 'true' }}
