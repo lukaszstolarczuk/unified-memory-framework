@@ -11,6 +11,7 @@ on:
           type: boolean
   schedule:
     - cron: '0 0 * * *'
+  pull_request:
 
 permissions:
   contents: read
@@ -32,14 +33,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake hwloc libhwloc-dev libnuma-dev libtbb-dev
-
-    - name: Download Coverity
-      run: |
-        wget -O coverity_tool.tgz -nv https://scan.coverity.com/download/linux64 --post-data \
-          "token=${{ secrets.COVERITY_SCAN_TOKEN }}&project=oneapi-src%2Funified-memory-framework"
-
-    - name: Extract Coverity
-      run: tar xzf coverity_tool.tgz
 
     - name: Configure CMake
       run: >
@@ -63,6 +56,14 @@ jobs:
           export PATH="$PATH:$COVERITY_DIR/bin"
         fi
         cov-build --dir ${{github.workspace}}/cov-int cmake --build ${{github.workspace}}/build --config Release -j$(nproc)
+
+    - name: Download Coverity
+      run: |
+        wget -O coverity_tool.tgz -nv https://scan.coverity.com/download/linux64 --post-data \
+          "token=${{ secrets.COVERITY_SCAN_TOKEN }}&project=oneapi-src%2Funified-memory-framework"
+
+    - name: Extract Coverity
+      run: tar xzf coverity_tool.tgz
 
     - name: Create tarball to analyze
       run: tar czvf cov-int_umf.tgz cov-int
