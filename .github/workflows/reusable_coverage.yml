@@ -17,7 +17,7 @@ env:
 
 jobs:
   Coverage:
-    name: Coverage build
+    name: Build & compute coverage
     runs-on: ubuntu-latest
 
     steps:

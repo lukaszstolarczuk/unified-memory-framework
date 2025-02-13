@@ -13,7 +13,7 @@ env:
   COVERAGE_NAME : "exports-coverage-proxy"
 
 jobs:
-  proxy-ubuntu:
+  proxy_ubuntu:
     name: Ubuntu
 
     strategy:
