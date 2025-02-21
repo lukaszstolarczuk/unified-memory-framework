@@ -62,7 +62,7 @@ umf_option(UMF_BUILD_LEVEL_ZERO_PROVIDER "Build Level Zero memory provider" ON)
 umf_option(UMF_BUILD_CUDA_PROVIDER "Build CUDA memory provider" ON)
 umf_option(UMF_BUILD_LIBUMF_POOL_JEMALLOC
            "Build the libumf_pool_jemalloc static library" OFF)
-umf_option(UMF_BUILD_TESTS "Build UMF tests" ON)
+umf_option(UMF_BUILD_TESTS "Build UMF tests" OFF)
 umf_option(UMF_BUILD_GPU_TESTS "Build UMF GPU tests" OFF)
 umf_option(UMF_BUILD_BENCHMARKS "Build UMF benchmarks" OFF)
 umf_option(UMF_BUILD_BENCHMARKS_MT "Build UMF multithreaded benchmarks" OFF)

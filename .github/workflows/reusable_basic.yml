@@ -13,6 +13,79 @@ env:
   COVERAGE_NAME : "exports-coverage-basic"
 
 jobs:
+  ubuntu-build:
+    name: Ubuntu
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-22.04']
+        build_type: [Release]
+        compiler: [{c: gcc, cxx: g++}, ]
+        shared_library: ['OFF', 'ON']
+        level_zero_provider: ['OFF']
+        cuda_provider: ['OFF']
+        install_tbb: ['ON']
+        link_hwloc_statically: ['ON']
+        include:
+          # test icx compiler
+          - os: 'ubuntu-22.04'
+            build_type: Release
+            compiler: {c: icx, cxx: icpx}
+            shared_library: 'ON'
+            level_zero_provider: 'ON'
+            cuda_provider: 'ON'
+            install_tbb: 'ON'
+            disable_hwloc: 'OFF'
+            link_hwloc_statically: 'ON'
+    runs-on: ${{matrix.os}}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        fetch-depth: 0
+
+    - name: Install apt packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang cmake libnuma-dev lcov libtbb-dev
+
+    - name: Install oneAPI basekit
+      if: matrix.compiler.cxx == 'icpx'
+      run: |
+        sudo apt-get install -y gpg-agent wget
+        wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+        echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+        sudo apt-get update
+        sudo apt-get install -y intel-oneapi-ippcp-devel intel-oneapi-ipp-devel intel-oneapi-common-oneapi-vars intel-oneapi-compiler-dpcpp-cpp
+
+    - name: Get UMF version
+      run: |
+        VERSION=$(git describe --tags --abbrev=0 | grep -oP '\d+\.\d+\.\d+')
+        echo "UMF_VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Configure build
+      run: >
+        ${{ matrix.compiler.cxx == 'icpx' && '. /opt/intel/oneapi/setvars.sh &&' || ''}} 
+        cmake
+        -B ${{env.BUILD_DIR}}
+        -G "Unix Makefiles"
+        -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+        -DUMF_BUILD_SHARED_LIBRARY=${{matrix.shared_library}}
+        -DCMAKE_C_COMPILER=${{matrix.compiler.c}}
+        -DCMAKE_CXX_COMPILER=${{matrix.compiler.cxx}}
+        -DUMF_BUILD_LEVEL_ZERO_PROVIDER=${{matrix.level_zero_provider}}
+        -DUMF_BUILD_CUDA_PROVIDER=${{matrix.cuda_provider}}
+        -DUMF_FORMAT_CODE_STYLE=OFF
+        -DUMF_DEVELOPER_MODE=OFF
+        -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF
+        -DUMF_LINK_HWLOC_STATICALLY=${{matrix.link_hwloc_statically}}
+
+    - name: Build UMF
+      run: |
+        ${{ matrix.compiler.cxx == 'icpx' && '. /opt/intel/oneapi/setvars.sh' || true }}
+        cmake --build ${{env.BUILD_DIR}} -j $(nproc)
+
   windows-build:
     name: Windows
     env:
@@ -101,7 +174,7 @@ jobs:
       run: |
         call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
         call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
-        cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j $Env:NUMBER_OF_PROCESSORS
+        cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j 4
 
     - name: Run tests
       working-directory: ${{env.BUILD_DIR}}
