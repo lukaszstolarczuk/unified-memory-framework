@@ -60,7 +60,7 @@ if(LIBHWLOC_LIBRARY)
     if(LIBHWLOC_FIND_VERSION)
         if(NOT LIBHWLOC_API_VERSION)
             print_hwloc_dirs()
-            message(FATAL_ERROR "Failed to retrieve libhwloc version")
+            message(WARNING "Failed to retrieve libhwloc version")
         elseif(NOT LIBHWLOC_API_VERSION VERSION_GREATER_EQUAL
                LIBHWLOC_FIND_VERSION)
             print_hwloc_dirs()

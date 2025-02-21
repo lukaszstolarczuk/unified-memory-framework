@@ -66,7 +66,7 @@ umf_option(UMF_BUILD_TESTS "Build UMF tests" ON)
 umf_option(UMF_BUILD_GPU_TESTS "Build UMF GPU tests" OFF)
 umf_option(UMF_BUILD_BENCHMARKS "Build UMF benchmarks" OFF)
 umf_option(UMF_BUILD_BENCHMARKS_MT "Build UMF multithreaded benchmarks" OFF)
-umf_option(UMF_BUILD_EXAMPLES "Build UMF examples" ON)
+umf_option(UMF_BUILD_EXAMPLES "Build UMF examples" OFF)
 umf_option(UMF_BUILD_GPU_EXAMPLES "Build UMF GPU examples" OFF)
 umf_option(UMF_BUILD_FUZZTESTS "Build UMF fuzz tests" OFF)
 umf_option(
