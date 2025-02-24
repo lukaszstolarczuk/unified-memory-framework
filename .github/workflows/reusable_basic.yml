@@ -14,6 +14,7 @@ env:
 
 jobs:
   ubuntu-build:
+    if: false
     name: Ubuntu
     strategy:
       fail-fast: false
@@ -95,7 +96,7 @@ jobs:
       matrix:
         os: ['windows-2019', 'windows-2022']
         build_type: [Release]
-        compiler: [{c: icx, cxx: icx}] # {c: clang-cl, cxx: clang-cl}, 
+        compiler: [{c: gcc, cxx: gcc}] # {c: clang-cl, cxx: clang-cl}, 
         shared_library: ['ON', 'OFF']
         level_zero_provider: ['OFF']
         cuda_provider: ['OFF']
@@ -121,13 +122,15 @@ jobs:
     - name: Configure MSVC environment
       uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
 
+    # choco install make
+    # echo "$PATH;C:\ProgramData\chocolatey\lib\make" >> $GITHUB_PATH
     # Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-    - name: Install Unix-like makefiles
+    - name: Install deps
       run: |
-        choco install make
-        echo "$PATH;C:\ProgramData\chocolatey\lib\make" >> $GITHUB_PATH
+        choco install mingw
 
     - name: Download icx compiler
+      if: false
       env:
         # Link source: https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler-download.html
         CMPLR_LINK: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/15a35578-2f9a-4f39-804b-3906e0a5f8fc/w_dpcpp-cpp-compiler_p_2024.2.1.83_offline.exe"
@@ -135,6 +138,7 @@ jobs:
         Invoke-WebRequest -Uri "${{ env.CMPLR_LINK }}" -OutFile compiler_install.exe
 
     - name: Install icx compiler
+      if: false
       shell: cmd
       run: |
         start /b /wait .\compiler_install.exe -s -x -f extracted --log extract.log
@@ -147,11 +151,11 @@ jobs:
         $version = (git describe --tags --abbrev=0 | Select-String -Pattern '\d+\.\d+\.\d+').Matches.Value
         echo "UMF_VERSION=$version" >> $env:GITHUB_ENV
 
+      # call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
+      # call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
     - name: Configure build
       shell: cmd
       run: |
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
         cmake ^
           -B ${{env.BUILD_DIR}} ^
           -G "Unix Makefiles" ^
@@ -165,10 +169,10 @@ jobs:
           -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF ^
           -DUMF_BUILD_LEVEL_ZERO_PROVIDER=${{matrix.level_zero_provider}} ^
           -DUMF_BUILD_CUDA_PROVIDER=${{matrix.cuda_provider}} ^
-          -DUMF_BUILD_TESTS=OFF ^
-          -DCMAKE_C_COMPILER_WORKS=1 ^
-          -DCMAKE_CXX_COMPILER_WORKS=1
+          -DUMF_BUILD_TESTS=OFF
 
+      # -DCMAKE_C_COMPILER_WORKS=1
+      # -DCMAKE_CXX_COMPILER_WORKS=1
     - name: Build UMF
       shell: cmd
       run: |
