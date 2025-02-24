@@ -372,7 +372,10 @@ function(add_umf_library)
                                 "not specified")
         endif()
 
-        if(WINDOWS)
+        if(WINDOWS AND CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+            target_link_options(${ARG_NAME} PRIVATE
+                                "-d ${ARG_WINDOWS_DEF_FILE}")
+        elseif(WINDOWS)
             target_link_options(${ARG_NAME} PRIVATE
                                 LINKER:/DEF:${ARG_WINDOWS_DEF_FILE})
         elseif(LINUX)
