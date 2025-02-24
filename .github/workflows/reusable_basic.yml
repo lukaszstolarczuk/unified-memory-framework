@@ -96,7 +96,7 @@ jobs:
       matrix:
         os: ['windows-2019', 'windows-2022']
         build_type: [Release]
-        compiler: [{c: gcc, cxx: gcc}] # {c: clang-cl, cxx: clang-cl},
+        compiler: [{c: gcc, cxx: gcc}] # {c: clang-cl, cxx: clang-cl}, 
         shared_library: ['ON', 'OFF']
         level_zero_provider: ['OFF']
         cuda_provider: ['OFF']
@@ -154,6 +154,7 @@ jobs:
       # call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
       # call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
     - name: Configure build
+      shell: cmd
       run: |
         cmake ^
           -B ${{env.BUILD_DIR}} ^
@@ -175,6 +176,7 @@ jobs:
       # make -j 4
     - name: Build UMF
       working-directory: ${{env.BUILD_DIR}}
+      shell: cmd
       run: cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j 4
 
     - name: Run tests
