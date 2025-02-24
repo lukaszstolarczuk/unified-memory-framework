@@ -291,7 +291,7 @@ endfunction()
 
 function(add_umf_target_link_options name)
     if(NOT MSVC)
-        if(NOT APPLE)
+        if(NOT APPLE AND NOT WINDOWS)
             target_link_options(${name} PRIVATE "LINKER:-z,relro,-z,now")
             if(UMF_USE_COVERAGE)
                 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
