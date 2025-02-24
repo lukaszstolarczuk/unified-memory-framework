@@ -174,11 +174,9 @@ jobs:
       # -DCMAKE_C_COMPILER_WORKS=1
       # -DCMAKE_CXX_COMPILER_WORKS=1
     - name: Build UMF
+      working-directory: ${{env.BUILD_DIR}}
       shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
-        call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
-        cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j 4
+      run: make -j 4
 
     - name: Run tests
       working-directory: ${{env.BUILD_DIR}}
