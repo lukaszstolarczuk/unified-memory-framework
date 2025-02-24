@@ -96,7 +96,7 @@ jobs:
       matrix:
         os: ['windows-2019', 'windows-2022']
         build_type: [Release]
-        compiler: [{c: gcc, cxx: gcc}] # {c: clang-cl, cxx: clang-cl}, 
+        compiler: [{c: gcc, cxx: gcc}] # {c: clang-cl, cxx: clang-cl},
         shared_library: ['ON', 'OFF']
         level_zero_provider: ['OFF']
         cuda_provider: ['OFF']
@@ -126,8 +126,7 @@ jobs:
     # echo "$PATH;C:\ProgramData\chocolatey\lib\make" >> $GITHUB_PATH
     # Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
     - name: Install deps
-      run: |
-        choco install mingw
+      run: choco install mingw
 
     - name: Download icx compiler
       if: false
@@ -142,7 +141,7 @@ jobs:
       shell: cmd
       run: |
         start /b /wait .\compiler_install.exe -s -x -f extracted --log extract.log
-        extracted\bootstrapper.exe -s --action install --eula=accept -p=NEED_VS2017_INTEGRATION=0 ^
+        extracted\bootstrapper.exe -s --action install --eula=accept -p=NEED_VS2017_INTEGRATION=0
           -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=0 --log-dir=.
 
     - name: Get UMF version
@@ -154,22 +153,21 @@ jobs:
       # call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
       # call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat"
     - name: Configure build
-      shell: cmd
-      run: |
-        cmake ^
-          -B ${{env.BUILD_DIR}} ^
-          -G "Unix Makefiles" ^
-          -DCMAKE_PREFIX_PATH="${{env.VCPKG_PATH}}" ^
-          -DCMAKE_C_COMPILER=${{matrix.compiler.c}} ^
-          -DCMAKE_CXX_COMPILER=${{matrix.compiler.cxx}} ^
-          -DUMF_BUILD_SHARED_LIBRARY=${{matrix.shared_library}} ^
-          -DUMF_LINK_HWLOC_STATICALLY=ON ^
-          -DUMF_FORMAT_CODE_STYLE=OFF ^
-          -DUMF_DEVELOPER_MODE=OFF ^
-          -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF ^
-          -DUMF_BUILD_LEVEL_ZERO_PROVIDER=${{matrix.level_zero_provider}} ^
-          -DUMF_BUILD_CUDA_PROVIDER=${{matrix.cuda_provider}} ^
-          -DUMF_BUILD_TESTS=OFF
+      run: >
+        cmake
+        -B ${{env.BUILD_DIR}}
+        -G "Unix Makefiles"
+        -DCMAKE_PREFIX_PATH="${{env.VCPKG_PATH}}"
+        -DCMAKE_C_COMPILER=${{matrix.compiler.c}}
+        -DCMAKE_CXX_COMPILER=${{matrix.compiler.cxx}}
+        -DUMF_BUILD_SHARED_LIBRARY=${{matrix.shared_library}}
+        -DUMF_LINK_HWLOC_STATICALLY=ON
+        -DUMF_FORMAT_CODE_STYLE=OFF
+        -DUMF_DEVELOPER_MODE=OFF
+        -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF
+        -DUMF_BUILD_LEVEL_ZERO_PROVIDER=${{matrix.level_zero_provider}}
+        -DUMF_BUILD_CUDA_PROVIDER=${{matrix.cuda_provider}}
+        -DUMF_BUILD_TESTS=OFF
 
       # -DCMAKE_C_COMPILER_WORKS=1
       # -DCMAKE_CXX_COMPILER_WORKS=1
