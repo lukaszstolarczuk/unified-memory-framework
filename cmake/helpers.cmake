@@ -291,7 +291,7 @@ endfunction()
 
 function(add_umf_target_link_options name)
     if(NOT MSVC)
-        if(NOT APPLE)
+        if(NOT APPLE AND NOT WINDOWS)
             target_link_options(${name} PRIVATE "LINKER:-z,relro,-z,now")
             if(UMF_USE_COVERAGE)
                 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -372,6 +372,10 @@ function(add_umf_library)
                                 "not specified")
         endif()
 
+        # if(WINDOWS AND CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+        #     target_link_options(${ARG_NAME} PRIVATE
+        #         LINKER:${ARG_WINDOWS_DEF_FILE})
+        # else
         if(WINDOWS)
             target_link_options(${ARG_NAME} PRIVATE
                                 LINKER:/DEF:${ARG_WINDOWS_DEF_FILE})
