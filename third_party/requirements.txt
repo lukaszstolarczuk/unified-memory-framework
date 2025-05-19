@@ -15,7 +15,7 @@ sphinxcontrib_serializinghtml==2.0.0
 sphinxcontrib_qthelp==2.0.0
 breathe==4.36.0
 sphinx==8.1.3
-sphinx_book_theme==1.1.3
+sphinx_book_theme==1.1.4
 # Spelling check in documentation
 codespell==2.4.1
 pyenchant==3.2.2
