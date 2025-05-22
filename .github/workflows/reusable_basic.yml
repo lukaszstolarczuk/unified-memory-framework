@@ -16,6 +16,7 @@ jobs:
   windows-build:
     name: Windows
     env:
+      VCPKG_DEFAULT_TRIPLET: x64-windows
       VCPKG_PATH: "${{github.workspace}}/build/vcpkg/packages/hwloc_x64-windows;${{github.workspace}}/build/vcpkg/packages/tbb_x64-windows;${{github.workspace}}/build/vcpkg/packages/jemalloc_x64-windows"
       VCPKG_PATH_BIN: "${{github.workspace}}/build/vcpkg/packages/hwloc_x64-windows/bin;${{github.workspace}}/build/vcpkg/packages/tbb_x64-windows/bin;${{github.workspace}}/build/vcpkg/packages/jemalloc_x64-windows/bin"
     strategy:
@@ -85,15 +86,24 @@ jobs:
       uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       id: cache-vcpkg-packages
       with:
-        path: ${{env.BUILD_DIR}}/vcpkg/packages
+        path: C:/vcpkg/packages
         key:  vcpkg-packages-basic
 
     - name: Cache vcpkg installed
       uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       id: cache-vcpkg-installed
       with:
-        path: ${{env.BUILD_DIR}}/vcpkg/installed
+        path: C:/vcpkg/installed
         key:  vcpkg-installed-basic
+
+    # - name: Install dependencies
+    #   working-directory: ${{github.workspace}}
+    #   run: |
+    #     vcpkg update
+    #     vcpkg upgrade
+    #     vcpkg install
+    #     vcpkg update
+    #     vcpkg upgrade
 
     - name: Initialize vcpkg
       uses: lukka/run-vcpkg@5e0cab206a5ea620130caf672fce3e4a6b5666a1 # v11.5
@@ -104,6 +114,7 @@ jobs:
 
     # Install the dependencies and add the bin folders to the PATH for older
     # versions of CMake to correctly locate the libraries
+      # working-directory: ${{github.workspace}}   --only-binarycaching
     - name: Install dependencies
       run: |
         vcpkg install --triplet x64-windows
@@ -111,19 +122,8 @@ jobs:
         echo "PATH=$env:Path" >> $env:GITHUB_ENV
       shell: pwsh
 
-    - name: Cache vcpkg packages
-      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
-      id: cache-vcpkg-packages-2
-      with:
-        path: ${{env.BUILD_DIR}}/vcpkg/packages
-        key:  vcpkg-packages-basic
-
-    - name: Cache vcpkg installed
-      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
-      id: cache-vcpkg-installed-2
-      with:
-        path: ${{env.BUILD_DIR}}/vcpkg/installed
-        key:  vcpkg-installed-basic
+    - name: vcpkg integrate install
+      run: vcpkg integrate install
 
     - name: Get UMF version
       run: |
