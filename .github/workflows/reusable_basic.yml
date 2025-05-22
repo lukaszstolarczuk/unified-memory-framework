@@ -302,6 +302,21 @@ jobs:
         Start-Process msiexec.exe -ArgumentList "/i $cmakeInstaller /quiet /norestart" -Wait
         cmake --version
 
+    # Cache vcpkg packages and installed artifacts. They will be reused in 'vcpkg install'
+    - name: Cache vcpkg packages
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      id: cache-vcpkg-packages
+      with:
+        path: ${{env.BUILD_DIR}}/vcpkg/packages
+        key:  vcpkg-packages-basic
+
+    - name: Cache vcpkg installed
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      id: cache-vcpkg-installed
+      with:
+        path: ${{env.BUILD_DIR}}/vcpkg/installed
+        key:  vcpkg-installed-basic
+
     - name: Initialize vcpkg
       uses: lukka/run-vcpkg@5e0cab206a5ea620130caf672fce3e4a6b5666a1 # v11.5
       with:
@@ -313,10 +328,10 @@ jobs:
     # versions of CMake to correctly locate the libraries
     - name: Install dependencies
       run: |
-        vcpkg install --triplet x64-windows        
+        vcpkg install --triplet x64-windows
         $env:Path = "${{env.VCPKG_PATH_BIN}};$env:Path"
         echo "PATH=$env:Path" >> $env:GITHUB_ENV
-      shell: pwsh # Specifies PowerShell as the shell for running the script.
+      shell: pwsh
 
     - name: Get UMF version
       run: |
