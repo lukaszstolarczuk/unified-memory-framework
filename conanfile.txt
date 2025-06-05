@@ -1,0 +1,11 @@
+[requires]
+hwloc/2.9.3
+jemalloc/5.3.0
+onetbb/2022.0.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[layout]
+cmake_layout
