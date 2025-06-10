@@ -250,11 +250,11 @@ jobs:
           - os: 'windows-2022'
             build_type: Release
             compiler: {c: clang-cl, cxx: clang-cl}
-            toolset: "-T ClangCL,host=x64"
+            extra_build_options: "-G 'Visual Studio 16 2019' -A 'Win64' -T ClangCL"
             shared_library: 'ON'
             level_zero_provider: 'ON'
             cuda_provider: 'ON'
-            cmake_ver: '3.14.0-win64-x64'
+            cmake_ver: 'default'
     name: Basic (${{matrix.os}}, build_type=${{matrix.build_type}}, compilers=${{matrix.compiler.c}}/${{matrix.compiler.cxx}}, shared_library=${{matrix.shared_library}}, level_zero_provider=${{matrix.level_zero_provider}}, cuda_provider=${{matrix.cuda_provider}}, cmake_ver=${{matrix.cmake_ver}})
     runs-on: ${{matrix.os}}
 
@@ -309,7 +309,7 @@ jobs:
       run: >
         cmake
         -B ${{env.BUILD_DIR}}
-        ${{matrix.toolset}}
+        ${{matrix.extra_build_options || ''}}
         -DCMAKE_INSTALL_PREFIX="${{env.INSTL_DIR}}"
         -DCMAKE_PREFIX_PATH="${{env.VCPKG_PATH}}"
         -DCMAKE_C_COMPILER=${{matrix.compiler.c}}
