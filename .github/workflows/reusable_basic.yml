@@ -237,7 +237,7 @@ jobs:
       VCPKG_PATH_BIN: "${{github.workspace}}/build/vcpkg/packages/hwloc_x64-windows/bin;${{github.workspace}}/build/vcpkg/packages/tbb_x64-windows/bin;${{github.workspace}}/build/vcpkg/packages/jemalloc_x64-windows/bin"
     strategy:
       matrix:
-        os: ['windows-2019', 'windows-2022']
+        os: ['windows-2022', 'windows-2025']
         build_type: [Debug, Release]
         compiler: [{c: cl, cxx: cl}]
         shared_library: ['ON', 'OFF']
@@ -245,8 +245,7 @@ jobs:
         cuda_provider: ['ON']
         cmake_ver: ['default']
         include:
-          - os: 'windows-2019'
-            # clang build fails on Windows 2022
+          - os: 'windows-2022'
             build_type: Release
             compiler: {c: clang-cl, cxx: clang-cl}
             shared_library: 'ON'
@@ -254,7 +253,7 @@ jobs:
             cuda_provider: 'ON'
             toolset: "-T ClangCL"
             cmake_ver: '3.14.0-win64-x64'
-          - os: 'windows-2022'
+          - os: 'windows-2025'
             build_type: Release
             compiler: {c: cl, cxx: cl}
             shared_library: 'ON'
@@ -262,7 +261,7 @@ jobs:
             cuda_provider: 'ON'
             umfd_lib: 'ON'
             cmake_ver: '3.28.0-windows-x86_64'
-          - os: 'windows-2022'
+          - os: 'windows-2025'
             build_type: Release
             compiler: {c: cl, cxx: cl}
             shared_library: 'ON'
@@ -385,7 +384,7 @@ jobs:
       matrix:
         build_type: [Release]
 
-    runs-on: 'windows-2022'
+    runs-on: 'windows-latest'
 
     steps:
     - name: Checkout
@@ -427,7 +426,7 @@ jobs:
       matrix:
         build_type: [Release]
 
-    runs-on: 'windows-2022'
+    runs-on: 'windows-latest'
 
     steps:
     - name: Checkout
@@ -469,7 +468,7 @@ jobs:
       matrix:
         build_type: [Release]
 
-    runs-on: 'windows-2022'
+    runs-on: 'windows-latest'
 
     steps:
     - name: Checkout
