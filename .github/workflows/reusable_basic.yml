@@ -250,6 +250,7 @@ jobs:
           - os: 'windows-2022'
             build_type: Release
             compiler: {c: clang-cl, cxx: clang-cl}
+            toolset: "-T ClangCL,host=x64"
             shared_library: 'ON'
             level_zero_provider: 'ON'
             cuda_provider: 'ON'
@@ -323,6 +324,7 @@ jobs:
       run: >
         cmake
         -B ${{env.BUILD_DIR}}
+        ${{matrix.toolset}}
         -DCMAKE_INSTALL_PREFIX="${{env.INSTL_DIR}}"
         -DCMAKE_PREFIX_PATH="${{env.VCPKG_PATH}}"
         -DCMAKE_C_COMPILER=${{matrix.compiler.c}}
