@@ -239,7 +239,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['windows-2022']
+        os: ['windows-2025']
         build_type: [Release]
         compiler: [{c: cl, cxx: cl}]
         shared_library: ['ON']
@@ -247,10 +247,18 @@ jobs:
         cuda_provider: ['ON']
         cmake_ver: ['default']
         include:
-          - os: 'windows-2022'
+          - os: 'windows-2025'
             build_type: Release
             compiler: {c: clang-cl, cxx: clang-cl}
-            extra_build_options: "-G 'Visual Studio 16 2019' -A 'Win64' -T ClangCL"
+            extra_build_options: "-T ClangCL"
+            shared_library: 'ON'
+            level_zero_provider: 'ON'
+            cuda_provider: 'ON'
+            cmake_ver: 'default'
+          - os: 'windows-2025'
+            build_type: Release
+            compiler: {c: clang-cl, cxx: clang-cl}
+            extra_build_options: "-G 'Visual Studio 16 2019' -T ClangCL"
             shared_library: 'ON'
             level_zero_provider: 'ON'
             cuda_provider: 'ON'
