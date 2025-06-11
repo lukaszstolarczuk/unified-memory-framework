@@ -235,6 +235,7 @@ jobs:
       VCPKG_PATH: "${{github.workspace}}/build/vcpkg/packages/hwloc_x64-windows;${{github.workspace}}/build/vcpkg/packages/tbb_x64-windows;${{github.workspace}}/build/vcpkg/packages/jemalloc_x64-windows"
       VCPKG_PATH_BIN: "${{github.workspace}}/build/vcpkg/packages/hwloc_x64-windows/bin;${{github.workspace}}/build/vcpkg/packages/tbb_x64-windows/bin;${{github.workspace}}/build/vcpkg/packages/jemalloc_x64-windows/bin"
     strategy:
+      fail-fast: false
       matrix:
         os: ['windows-2022', 'windows-2025']
         build_type: [Debug, Release]
@@ -253,7 +254,7 @@ jobs:
             shared_library: 'ON'
             level_zero_provider: 'ON'
             cuda_provider: 'ON'
-            cmake_ver: 'default'
+            cmake_ver: '3.14.0-win64-x64'
           # Custom CMake and umfd enabled
           - os: 'windows-2025'
             build_type: Release
@@ -265,6 +266,14 @@ jobs:
             cmake_ver: '3.28.0-windows-x86_64'
           # Custom, old CMake in a selected build
           - os: 'windows-2025'
+            build_type: Debug
+            compiler: {c: cl, cxx: cl}
+            shared_library: 'ON'
+            level_zero_provider: 'ON'
+            cuda_provider: 'ON'
+            cmake_ver: '3.14.0-win64-x64'
+          # Custom, old CMake in a selected build
+          - os: 'windows-2022'
             build_type: Release
             compiler: {c: cl, cxx: cl}
             shared_library: 'ON'
