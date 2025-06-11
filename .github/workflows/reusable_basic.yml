@@ -242,7 +242,6 @@ jobs:
         shared_library: ['ON', 'OFF']
         level_zero_provider: ['ON']
         cuda_provider: ['ON']
-        cmake_ver: ['default']
         include:
           # clang-cl works well with Ninja, Debug build
           # For VS generator it produces build errors not related to UMF
@@ -289,7 +288,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install cmake (non-default version)
-      if: matrix.cmake_ver != 'default'
+      if: ${{ matrix.cmake_ver != 'default' && matrix.cmake_ver != '' }}
       run: |
         $ErrorActionPreference = "Stop"
         $cmakePath = "C:\Program Files\CMake"
