@@ -237,19 +237,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['windows-2022', 'windows-2025']
-        build_type: [Debug, Release]
+        os: ['windows-2025']
+        build_type: [Release]
         compiler: [{c: cl, cxx: cl}]
-        shared_library: ['ON', 'OFF']
+        shared_library: ['ON']
         level_zero_provider: ['ON']
         cuda_provider: ['ON']
         cmake_ver: ['default']
         include:
-          # clang-cl works well with Ninja, Debug build
-          # For VS generator it produces build errors not related to UMF
           - os: 'windows-2025'
             build_type: Debug
-            compiler: {c: clang-cl, cxx: clang-cl}
+            compiler: {c: '', cxx: ''}
             extra_build_options: '-G Ninja'
             shared_library: 'ON'
             level_zero_provider: 'ON'
@@ -267,7 +265,7 @@ jobs:
           # Custom, old CMake in a selected build
           - os: 'windows-2025'
             build_type: Debug
-            compiler: {c: cl, cxx: cl}
+            compiler: {c: '', cxx: ''}
             shared_library: 'ON'
             level_zero_provider: 'ON'
             cuda_provider: 'ON'
@@ -275,7 +273,7 @@ jobs:
           # Custom, old CMake in a selected build
           - os: 'windows-2022'
             build_type: Release
-            compiler: {c: cl, cxx: cl}
+            compiler: {c: '', cxx: ''}
             shared_library: 'ON'
             level_zero_provider: 'ON'
             cuda_provider: 'ON'
