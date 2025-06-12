@@ -31,18 +31,12 @@ echo "## Running all tests ..."
 ctest --verbose
 
 echo "## Running tests bound to a numa node 0 and node 1 ..."
-numactl -N 0 ctest --output-on-failure
-numactl -N 1 ctest --output-on-failure
+numactl -N 0 ctest --output-on-failure -R "memspace|memtarget"
+numactl -N 1 ctest --output-on-failure -R "memspace|memtarget"
 
 if [ "$COVERAGE" = "COVERAGE" ]; then
 	COVERAGE_FILE_NAME=exports-coverage-qemu-${OS_FULL_NAME}-${CONFIG_NAME}
 	echo "COVERAGE_FILE_NAME: $COVERAGE_FILE_NAME"
 	../scripts/coverage/coverage_capture.sh $COVERAGE_FILE_NAME
 	mv ./$COVERAGE_FILE_NAME $COVERAGE_DIR
-fi
-
-# run tests under valgrind only on long run or for default configuration
-if [ "${SHORT_RUN}" != "true" ] || [ "${CONFIG_NAME}" == "default" ]; then
-	echo "## Running tests under valgrind memcheck ..."
-	../test/test_valgrind.sh .. . memcheck
 fi

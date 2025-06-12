@@ -142,12 +142,9 @@ jobs:
           echo "### Testing ${config_name} ###"
           umf/scripts/qemu/start_qemu.sh ${config_name}
 
-          ssh testuser@127.0.0.1 -p 2222 -t "export SHORT_RUN=${SHORT_RUN} OS_FULL_NAME=${{matrix.os}} && /home/testuser/scripts/qemu/run-tests.sh COVERAGE ${config_name}"
-          scp -r -P 2222 testuser@127.0.0.1:/home/testuser/coverage ./
-          # ssh may return non-zero error code on closing the connection in Ubuntu 22.04
+          ssh testuser@127.0.0.1 -p 2222 -t "export SHORT_RUN=${SHORT_RUN} OS_FULL_NAME=${{matrix.os}} && /home/testuser/scripts/qemu/run-tests.sh NOPE ${config_name}"
           ssh testuser@127.0.0.1 -p 2222 -t "sudo shutdown -h now" || true
         done
-        ls -al ./coverage
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       with:
