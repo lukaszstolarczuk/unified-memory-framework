@@ -423,6 +423,7 @@ if(UMF_BUILD_LEVEL_ZERO_PROVIDER)
         # We don't want to build and include Level Zero binaries to our install
         # target. For CMake >= 3.28 we use EXCLUDE_FROM_ALL flag to do that, but
         # for older versions we need to use FetchContent_Populate.
+        cmake_policy(SET CMP0174 NEW)
         if(CMAKE_VERSION VERSION_LESS 3.28)
             FetchContent_Declare(
                 level-zero-loader
@@ -430,11 +431,12 @@ if(UMF_BUILD_LEVEL_ZERO_PROVIDER)
                 GIT_TAG ${LEVEL_ZERO_LOADER_TAG})
             FetchContent_Populate(level-zero-loader)
         else()
+            # 'non-existing-dir' is added to avoid configuring L0 loader
             FetchContent_Declare(
                 level-zero-loader
                 GIT_REPOSITORY ${LEVEL_ZERO_LOADER_REPO}
                 GIT_TAG ${LEVEL_ZERO_LOADER_TAG}
-                EXCLUDE_FROM_ALL)
+                EXCLUDE_FROM_ALL SOURCE_SUBDIR "non-existing-dir")
             FetchContent_MakeAvailable(level-zero-loader)
         endif()
 
