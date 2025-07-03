@@ -672,66 +672,11 @@ if(LINUX
     set(EXAMPLES "")
 
     if(UMF_POOL_SCALABLE_ENABLED)
-        set(EXAMPLES ${EXAMPLES} basic custom_file_provider)
+        set(EXAMPLES ${EXAMPLES} fetch_content)
     else()
         message(
             STATUS
-                "The basic and custom_file_provider examples require TBB to be installed and added to the default library search path - skipping"
-        )
-    endif()
-
-    if(LIBNUMA_FOUND)
-        set(EXAMPLES ${EXAMPLES} memspace_hmat memspace_numa)
-    else()
-        message(
-            STATUS
-                "The memspace_hmat and memspace_numa examples require libnuma to be installed and added to the default library search path - skipping"
-        )
-    endif()
-
-    if(UMF_BUILD_GPU_EXAMPLES AND UMF_LEVEL_ZERO_ENABLED)
-        set(EXAMPLES ${EXAMPLES} level_zero_shared_memory)
-    else()
-        message(
-            STATUS
-                "GPU level zero shared memory example requires UMF_BUILD_GPU_EXAMPLES and "
-                "UMF_BUILD_LEVEL_ZERO_PROVIDER to be turned ON - skipping")
-    endif()
-
-    if(UMF_BUILD_GPU_EXAMPLES AND UMF_CUDA_ENABLED)
-        set(EXAMPLES ${EXAMPLES} cuda_shared_memory)
-    else()
-        message(
-            STATUS
-                "GPU CUDA shared memory example requires UMF_BUILD_GPU_EXAMPLES "
-                "and UMF_BUILD_CUDA_PROVIDER to be turned ON and installed CUDA "
-                "libraries - skipping")
-    endif()
-
-    # TODO add IPC examples for CUDA
-    if(UMF_BUILD_GPU_EXAMPLES AND UMF_LEVEL_ZERO_ENABLED)
-        set(EXAMPLES ${EXAMPLES} ipc_level_zero)
-    else()
-        message(
-            STATUS "IPC Level Zero example requires UMF_BUILD_GPU_EXAMPLES and "
-                   "UMF_BUILD_LEVEL_ZERO_PROVIDER to be turned ON - skipping")
-    endif()
-
-    if(UMF_POOL_SCALABLE_ENABLED)
-        set(EXAMPLES ${EXAMPLES} ipc_ipcapi)
-    else()
-        message(
-            STATUS
-                "IPC examples with UMF pool API are supported on Linux with TBB installed only - skipping"
-        )
-    endif()
-
-    if(UMF_POOL_JEMALLOC_ENABLED)
-        set(EXAMPLES ${EXAMPLES} dram_and_fsdax)
-    else()
-        message(
-            STATUS
-                "The dram_and_fsdax example is supported on Linux only and requires the jemalloc pool, but it is disabled - skipping"
+                "The basic, custom_file_provider, and fetch_content examples require TBB to be installed and added to the default library search path - skipping"
         )
     endif()
 

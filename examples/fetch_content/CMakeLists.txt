@@ -31,6 +31,11 @@ target_include_directories(${EXAMPLE_NAME} PRIVATE ${LIBUMF_INCLUDE_DIRS})
 target_link_directories(${EXAMPLE_NAME} PRIVATE ${LIBHWLOC_LIBRARY_DIRS})
 target_link_libraries(${EXAMPLE_NAME} PRIVATE ${LIBUMF_LIBRARIES} hwloc)
 
+message(STATUS "fetch_content example used paths:")
+message(STATUS "LIBUMF_INCLUDE_DIRS=${LIBUMF_INCLUDE_DIRS}")
+message(STATUS "LIBUMF_LIBRARY_DIRS=${LIBUMF_LIBRARIES}")
+message(STATUS "LIBHWLOC_LIBRARY_DIRS=${LIBHWLOC_LIBRARY_DIRS}")
+
 # an optional part - adds a test of this example
 add_test(
     NAME ${EXAMPLE_NAME}
