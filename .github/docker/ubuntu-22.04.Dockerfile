@@ -41,6 +41,7 @@ ARG MISC_DEPS="\
 	automake \
 	clang \
 	lcov \
+	pkg-config \
 	python3-pip \
 	sudo \
 	whois"
