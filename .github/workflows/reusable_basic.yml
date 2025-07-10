@@ -141,7 +141,7 @@ jobs:
             disable_hwloc: 'OFF'
             link_hwloc_statically: 'ON'
             cmake_ver: 'default'
-            extra_args: '-DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF'
+            extra_args: '-DBLARGHA=1'
           - os: ubuntu-24.04
             build_type: Release
             compiler: {c: gcc, cxx: g++}
@@ -152,7 +152,7 @@ jobs:
             disable_hwloc: 'OFF'
             link_hwloc_statically: 'ON'
             cmake_ver: 'default'
-            extra_args: '-DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF'
+            extra_args: '-DBLARGHA=1'
     name: Basic (${{matrix.os}}, build_type=${{matrix.build_type}}, compilers=${{matrix.compiler.c}}/${{matrix.compiler.cxx}}, shared_library=${{matrix.shared_library}}, level_zero_provider=${{matrix.level_zero_provider}}, cuda_provider=${{matrix.cuda_provider}}, install_tbb=${{matrix.install_tbb}}, disable_hwloc=${{matrix.disable_hwloc}}, link_hwloc_statically=${{matrix.link_hwloc_statically}}, cmake_ver=${{matrix.cmake_ver}})
 
     steps:
@@ -208,7 +208,7 @@ jobs:
         -DUMF_BUILD_CUDA_PROVIDER=${{matrix.cuda_provider}}
         -DUMF_FORMAT_CODE_STYLE=OFF
         -DUMF_DEVELOPER_MODE=ON
-        -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=ON
+        -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=OFF
         -DUMF_TESTS_FAIL_ON_SKIP=ON
         -DUMF_DISABLE_HWLOC=${{matrix.disable_hwloc}}
         -DUMF_LINK_HWLOC_STATICALLY=${{matrix.link_hwloc_statically}}
