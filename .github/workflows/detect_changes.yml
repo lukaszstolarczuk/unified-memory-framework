@@ -37,7 +37,7 @@ jobs:
 
   BuildDocker:
     needs: DetectChanges
-    if: ${{ contains(join(needs.DetectChanges.outputs.changed_files, ' '), '.github/docker/') }}
+    if: false
     uses: ./.github/workflows/reusable_dockers_build.yml
     permissions:
       contents: read
